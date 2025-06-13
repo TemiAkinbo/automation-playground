@@ -163,15 +163,18 @@ def export_sonarqube_issues(results, output_path):
         "warning": "MAJOR",
         "note": "MINOR"
     }
+    
     sonar_issues = []
     for res in results:
+        enriched_msg = f"{res['description']} (CWE: {res['cwe']}) See: {res['help_url']}"
+
         sonar_issues.append({
             "engineId": "vb6-sast",
             "ruleId": res['rule_id'],
             "severity": severity_map.get(res['severity'], "MAJOR"),
             "type": "VULNERABILITY",
             "primaryLocation": {
-                "message": res['description'],
+                "message": enriched_msg,
                 "filePath": res['file'],
                 "textRange": {
                     "startLine": res['line'],
